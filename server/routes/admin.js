@@ -1,0 +1,14 @@
+const express = require('express');
+const router = express.Router();
+const { getStats, getUsers, toggleBan, createAd, updateAd, deleteAd, getRedemptions, updateRedemption, getMessages } = require('../controllers/adminController');
+const { adminProtect } = require('../middleware/auth');
+router.get('/stats', adminProtect, getStats);
+router.get('/users', adminProtect, getUsers);
+router.put('/users/:id/ban', adminProtect, toggleBan);
+router.post('/ads', adminProtect, createAd);
+router.put('/ads/:id', adminProtect, updateAd);
+router.delete('/ads/:id', adminProtect, deleteAd);
+router.get('/redemptions', adminProtect, getRedemptions);
+router.put('/redemptions/:id', adminProtect, updateRedemption);
+router.get('/messages', adminProtect, getMessages);
+module.exports = router;
