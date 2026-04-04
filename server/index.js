@@ -50,8 +50,18 @@ app.use((err, req, res, next) => {
 
 app.use('*', (req, res) => res.status(404).json({ success: false, message: 'Route not found' }));
 
+const PORT = process.env.PORT || 5000;
+
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => { console.log('✅ MongoDB Connected'); app.listen(process.env.PORT || 5000, () => console.log(`🚀 Server on port ${process.env.PORT || 5000}`)); })
-  .catch(err => { console.error('❌ MongoDB failed:', err.message); process.exit(1); });
+  .then(() => {
+    console.log('✅ MongoDB Connected');
+    app.listen(PORT, '0.0.0.0', () => {
+      console.log(`🚀 Server running on port ${PORT}`);
+    });
+  })
+  .catch(err => {
+    console.error('❌ MongoDB failed:', err.message);
+    process.exit(1);
+  });
 
 module.exports = app;
