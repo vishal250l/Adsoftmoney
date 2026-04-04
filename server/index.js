@@ -10,7 +10,23 @@ const app = express();
 const limiter = rateLimit({ windowMs: 15*60*1000, max: 100, message: { success: false, message: 'Too many requests' } });
 const authLimiter = rateLimit({ windowMs: 15*60*1000, max: 15, message: { success: false, message: 'Too many auth attempts' } });
 
-app.use(cors({ origin: process.env.NODE_ENV === 'production' ? process.env.CLIENT_URL : 'http://localhost:5173', credentials: true }));
+app.use(cors({
+  origin: function(origin, callback) {
+    const allowedOrigins = [
+      'http://localhost:5173',
+      'http://localhost:3000',
+      'https://thunderous-pixie-a9fdbf.netlify.app',
+      process.env.CLIENT_URL,
+    ].filter(Boolean);
+
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
